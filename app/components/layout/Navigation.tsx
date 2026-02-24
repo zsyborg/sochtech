@@ -206,8 +206,9 @@ export const Navigation = ({
             letterSpacing: '0.1em',
           }}
         >
-          {logoText}
-          <span className='uppercase' style={{ color: NEON_COLORS.magenta }}>Technologies</span>
+          {/* {logoText}
+          <span className='uppercase' style={{ color: NEON_COLORS.magenta }}>Technologies</span> */}
+          <img src="/logo.png" alt="Soch Technologies Logo" style={{ height: '40px', width: 'auto' }} />
         </div>
 
         {/* Nav Links */}

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Navigation from "../components/layout/Navigation";
 import Footer from "../components/layout/Footer";
+import Schema from "../components/Schema";
 
 import {
   ParticleBackground,
@@ -107,6 +108,25 @@ const TeamMemberCard = ({
 
 export default function AboutPage() {
   const isVisible = useScrollAnimation();
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Soch Technologies",
+    "image": "https://sochtechnologies.com/artificial-intelligence.png",
+    "url": "https://sochtechnologies.com",
+    "telephone": "+91-9167021410",
+    "description": "Soch Technologies is a digital IT agency providing web development, mobile apps, SEO, cloud solutions & Web 3 based Solutions.",
+    
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Andheri East",
+      "addressLocality": "Mumbai",
+      "addressRegion": "Maharashtra",
+      "postalCode": "400069",
+      "addressCountry": "IN"
+    }
+  };
 
   const stats = [
     { number: "500+", label: "Projects Delivered", icon: "🚀" },

@@ -1,4 +1,4 @@
-import React, { type ReactElement } from 'react';
+import React, { type ReactElement, useState, useEffect } from 'react';
 import { FaTwitter, FaLinkedin, FaInstagram, FaTelegram, FaSlack } from 'react-icons/fa';
 import { NEON_COLORS } from '../../lib/theme';
 
@@ -40,6 +40,14 @@ export interface FooterProps {
 }
 
 /**
+ * Interface for quote data from quotable.io API
+ */
+interface Quote {
+  content: string;
+  author: string;
+}
+
+/**
  * Footer - A sci-fi styled footer component.
  * 
  * Features:
@@ -54,14 +62,14 @@ export interface FooterProps {
  * @example
  * ```tsx
  * <Footer
- *   companyName="NexusCore"
+ *   companyName="SochTechnologies"
  *   tagline="Pioneering the future"
  *   quickLinks={[{ label: 'Home', url: '#home' }]}
  * />
  * ```
  */
 export const Footer = ({
-  companyName = 'Nexus',
+  companyName = 'Soch Technologies',
   tagline = 'Pioneering the future of digital innovation with cutting-edge technology solutions.',
   quickLinks = [
     { label: 'Home', url: '/home' },
@@ -93,6 +101,29 @@ export const Footer = ({
     (e.target as HTMLAnchorElement).style.color = 'rgba(255, 255, 255, 0.6)';
   };
 
+  // Fetch random quote from quotable.io
+  const [quote, setQuote] = useState<Quote | null>(null);
+  const [quoteLoading, setQuoteLoading] = useState(true);
+  const [quoteError, setQuoteError] = useState(false);
+
+  useEffect(() => {
+    const fetchQuote = async () => {
+      try {
+        const response = await fetch('https://api.quotable.io/random');
+        if (!response.ok) throw new Error('Failed to fetch quote');
+        const data = await response.json();
+        setQuote(data);
+      } catch (error) {
+        console.error('Error fetching quote:', error);
+        setQuoteError(true);
+      } finally {
+        setQuoteLoading(false);
+      }
+    };
+
+    fetchQuote();
+  }, []);
+
   return (
     <footer
       style={{
@@ -101,7 +132,7 @@ export const Footer = ({
       }}
     >
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
           <div>
             <div
@@ -113,8 +144,10 @@ export const Footer = ({
                 marginBottom: '16px',
               }}
             >
-              {companyName}
-              <span style={{ color: NEON_COLORS.magenta }}>CORE</span>
+              {/* {companyName}
+              <span style={{ color: NEON_COLORS.magenta }}>CORE</span> */}
+          <img src="/logo.png" alt="Soch Technologies Logo" style={{ height: '33px', width: 'auto' }} />
+
             </div>
             <p
               style={{
@@ -195,7 +228,7 @@ export const Footer = ({
             </ul>
           </div>
 
-          {/* Social */}
+          {/* Quote of the moment */}
           <div>
             <h4
               style={{
@@ -206,37 +239,69 @@ export const Footer = ({
                 letterSpacing: '0.1em',
               }}
             >
-              Connect
+              Quote of the moment
             </h4>
-            <div className="flex gap-4">
-              {socialLinks.map((link, index) => (
+            {quoteLoading ? (
+              <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px', fontStyle: 'italic' }}>
+                Loading quote...
+              </p>
+            ) : quoteError ? (
+              <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px', fontStyle: 'italic' }}>
+                "The only way to do great work is to love what you do."
+                <span style={{ display: 'block', marginTop: '8px', color: NEON_COLORS.cyan }}>
+                  — Steve Jobs
+                </span>
+              </p>
+            ) : quote ? (
+              <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px', fontStyle: 'italic' }}>
+                "{quote.content}"
+                <span style={{ display: 'block', marginTop: '8px', color: NEON_COLORS.cyan }}>
+                  — {quote.author}
+                </span>
+              </p>
+            ) : null}
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4
+              style={{
+                color: '#fff',
+                fontWeight: 'bold',
+                marginBottom: '16px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+              }}
+            >
+              Contact
+            </h4>
+            <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px', lineHeight: 1.8 }}>
+              <p style={{ marginBottom: '8px' }}>
+                <span style={{ color: NEON_COLORS.cyan }}>Email:</span>{' '}
                 <a
-                  key={index}
-                  href={link.url}
-                  aria-label={link.label}
-                  style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '50%',
-                    border: `1px solid ${NEON_COLORS.cyan}50`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '18px',
-                    transition: 'all 0.3s ease-out',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = NEON_COLORS.cyan;
-                    e.currentTarget.style.boxShadow = `0 0 15px ${NEON_COLORS.cyan}40`;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = `${NEON_COLORS.cyan}50`;
-                    e.currentTarget.style.boxShadow = 'none';
-                  }}
+                  href="mailto:info@sochtechnologies.com"
+                  style={{ color: 'rgba(255, 255, 255, 0.6)', textDecoration: 'none' }}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
                 >
-                  {link.icon}
+                  info@sochtechnologies.com
                 </a>
-              ))}
+              </p>
+              <p style={{ marginBottom: '8px' }}>
+                <span style={{ color: NEON_COLORS.cyan }}>Phone:</span>{' '}
+                <a
+                  href="tel:+919167021410"
+                  style={{ color: 'rgba(255, 255, 255, 0.6)', textDecoration: 'none' }}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  +91 9167021410
+                </a>
+              </p>
+              <p>
+                <span style={{ color: NEON_COLORS.cyan }}>Location:</span>{' '}
+                Mumbai, India
+              </p>
             </div>
           </div>
         </div>
