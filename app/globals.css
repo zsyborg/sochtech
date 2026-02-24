@@ -1,0 +1,54 @@
+/*
+ * Template Name: Nexus
+ * Author: Zahid Shaikh
+ * Envato URL:
+ * Version: v1
+ * Description: A sleek and modern sci-fi theme designed for futuristic websites.
+ *              Features a dark and immersive aesthetic with neon accents and
+ *              advanced UI components for a cutting-edge user experience.
+ */
+
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* FrameNefrex custom styles */
+.arwes-frames-framenefrex-bg,
+[data-name="bg"] {
+  background-color: hsl(180, 75%, 10%) !important;
+  opacity: 0.95;
+}
+
+.arwes-frames-framenefrex-line,
+[data-name="line"] {
+  color: hsl(180, 75%, 50%) !important;
+}
+
+.arwes-frames-framenefrex-header,
+[data-name="header"] {
+  color: hsl(180, 75%, 80%) !important;
+}
+

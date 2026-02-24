@@ -1,0 +1,143 @@
+import { useState, useEffect, useCallback } from 'react';
+
+/**
+ * Particle data structure for the particle system.
+ */
+export interface Particle {
+  x: number;
+  y: number;
+  size: number;
+  speed: number;
+  opacity: number;
+}
+
+/**
+ * Custom hook that generates and manages floating particle data.
+ * Particles move upward and reset when they reach the top.
+ * 
+ * @param count - Number of particles to generate (default: 50)
+ * @returns Array of particle objects with position, size, speed, and opacity
+ * 
+ * @example
+ * ```tsx
+ * const particles = useParticles(30);
+ * ```
+ */
+export const useParticles = (count: number = 50): Particle[] => {
+  const [particles, setParticles] = useState<Particle[]>([]);
+
+  useEffect(() => {
+    const newParticles: Particle[] = Array.from({ length: count }, () => ({
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 3 + 1,
+      speed: Math.random() * 0.5 + 0.2,
+      opacity: Math.random() * 0.5 + 0.2,
+    }));
+    setParticles(newParticles);
+  }, [count]);
+
+  return particles;
+};
+
+/**
+ * Custom hook that manages an oscillating scanning line position.
+ * The line moves up and down within the viewport bounds.
+ * 
+ * @returns Current vertical position (0-100) of the scanning line
+ * 
+ * @example
+ * ```tsx
+ * const position = useScanningLine();
+ * ```
+ */
+export const useScanningLine = (): number => {
+  const [position, setPosition] = useState(0);
+  const [direction, setDirection] = useState(1);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPosition((pos) => {
+        const newPos = pos + direction * 0.5;
+        if (newPos >= 100) {
+          setDirection(-1);
+          return 100;
+        }
+        if (newPos <= 0) {
+          setDirection(1);
+          return 0;
+        }
+        return newPos;
+      });
+    }, 16);
+
+    return () => clearInterval(interval);
+  }, [direction]);
+
+  return position;
+};
+
+/**
+ * Custom hook for managing scroll-based state.
+ * Useful for sticky headers, scroll animations, etc.
+ * 
+ * @param threshold - Pixel threshold to consider as "scrolled" (default: 50)
+ * @returns Whether the page has been scrolled past the threshold
+ * 
+ * @example
+ * ```tsx
+ * const isScrolled = useScrollPosition(100);
+ * ```
+ */
+export const useScrollPosition = (threshold: number = 50): boolean => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > threshold);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [threshold]);
+
+  return isScrolled;
+};
+
+/**
+ * Custom hook for managing active section based on scroll position.
+ * Automatically detects which section is currently in view.
+ * 
+ * @param sectionIds - Array of section element IDs to track
+ * @returns ID of the currently active section
+ * 
+ * @example
+ * ```tsx
+ * const activeSection = useActiveSection(['home', 'features', 'contact']);
+ * ```
+ */
+export const useActiveSection = (sectionIds: string[]): string => {
+  const [activeSection, setActiveSection] = useState(sectionIds[0] || '');
+
+  useEffect(() => {
+    const handleScroll = () => {
+      for (const id of sectionIds) {
+        const element = document.getElementById(id);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 150 && rect.bottom >= 150) {
+            setActiveSection(id);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Initial check
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [sectionIds]);
+
+  return activeSection;
+};
