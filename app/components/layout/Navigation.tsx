@@ -86,14 +86,14 @@ export const Navigation = ({
     {
       id: 'about',
       label: 'ABOUT US',
-      href: '/about.html',
+      href: '/about',
     },
-    { id: 'services', label: 'SERVICES', href: '/services.html' },
-    { id: 'contact', label: 'CONTACT US', href: '/contact.html' },
+    { id: 'services', label: 'SERVICES', href: '/services' },
+    { id: 'contact', label: 'CONTACT US', href: '/contact' },
     { 
       id: 'blog', 
       label: 'BLOG', 
-      href: '/blog,html',
+      href: '/blog',
       // dropdown: [
       //   { id: 'blog-main', label: 'Blog Home', href: '/blog' },
       //   { id: 'blog-v1', label: 'Holographic Grid', href: '/blog/variation-1' },
